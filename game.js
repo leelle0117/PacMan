@@ -499,9 +499,22 @@ window.addEventListener('keydown', ({ key }) => {
     }
 });
 
-window.addEventListener('keyup', ({ key }) => {
-    if (keys[key]) {
-        keys[key].pressed = false;
-    }
+// D-pad Controls for Mobile
+const dpadDirections = {
+    'dpad-up':    'ArrowUp',
+    'dpad-down':  'ArrowDown',
+    'dpad-left':  'ArrowLeft',
+    'dpad-right': 'ArrowRight'
+};
+
+Object.entries(dpadDirections).forEach(([btnId, arrowKey]) => {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent scroll/zoom while using D-pad
+        Object.keys(keys).forEach(k => { keys[k].pressed = false; });
+        keys[arrowKey].pressed = true;
+        lastKey = arrowKey;
+    }, { passive: false });
 });
 

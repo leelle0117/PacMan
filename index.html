@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Pac-Man</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="game-container">
         <header>
             <h1>NEON <span class="pacman-text">PAC-MAN</span></h1>
         </header>
-        
+
         <div id="game-wrapper">
             <canvas id="gameCanvas"></canvas>
-            
+
             <div id="ui-overlay" class="hidden">
                 <div class="overlay-content">
                     <h2 id="status-text">GAME OVER</h2>
@@ -41,11 +44,22 @@
             </div>
         </div>
 
-        <div class="controls-hint">
+        <div class="controls-hint keyboard-only">
             Use <span class="key">ARROW KEYS</span> to navigate
         </div>
+
+        <div class="dpad touch-only">
+            <button class="dpad-btn" id="dpad-up">▲</button>
+            <div class="dpad-middle-row">
+                <button class="dpad-btn" id="dpad-left">◀</button>
+                <div class="dpad-center"></div>
+                <button class="dpad-btn" id="dpad-right">▶</button>
+            </div>
+            <button class="dpad-btn" id="dpad-down">▼</button>
+        </div>
     </div>
-    
+
     <script src="game.js"></script>
 </body>
+
 </html>
