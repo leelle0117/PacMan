@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Pac-Man</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>NEON <span class="pacman-text">PAC-MAN</span></h1>
+        </header>
+        
+        <div id="game-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            
+            <div id="ui-overlay" class="hidden">
+                <div class="overlay-content">
+                    <h2 id="status-text">GAME OVER</h2>
+                    <button id="restart-btn">PLAY AGAIN</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud">
+            <div class="hud-item">
+                <span class="label">SCORE</span>
+                <span id="score-val" class="value">000000</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">LIVES</span>
+                <div id="lives-container">
+                    <div class="life"></div>
+                    <div class="life"></div>
+                    <div class="life"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-hint">
+            Use <span class="key">ARROW KEYS</span> to navigate
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
