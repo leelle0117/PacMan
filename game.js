@@ -13,6 +13,10 @@ const restartBtn = document.getElementById('restart-btn');
 const TILE_SIZE = 24;
 const FPS = 60;
 
+// Mobile devices get a slower speed for easier direction control
+const IS_MOBILE = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const SPEED = IS_MOBILE ? 1.5 : 2;
+
 // Game State
 let score = 0;
 let lives = 3;
@@ -137,7 +141,7 @@ class Ghost {
         this.radius = TILE_SIZE / 2 - 2;
         this.color = color;
         this.prevCollisions = [];
-        this.speed = 2;
+        this.speed = SPEED;
         this.scared = false;
     }
 
@@ -233,7 +237,7 @@ function init() {
                                 x: TILE_SIZE * j + TILE_SIZE / 2,
                                 y: TILE_SIZE * i + TILE_SIZE / 2
                             },
-                            velocity: { x: 2, y: 0 },
+                            velocity: { x: SPEED, y: 0 },
                             color: colors[ghosts.length]
                         }));
                     }
@@ -294,50 +298,50 @@ function animate() {
         let collision = false;
         for (let i = 0; i < boundaries.length; i++) {
             if (circleCollidesWithRectangle({
-                circle: { ...pacman, velocity: { x: 0, y: -2 } },
+                circle: { ...pacman, velocity: { x: 0, y: -SPEED } },
                 rectangle: boundaries[i]
             })) {
                 collision = true;
                 break;
             }
         }
-        if (!collision) pacman.velocity = { x: 0, y: -2 };
+        if (!collision) pacman.velocity = { x: 0, y: -SPEED };
     } else if (keys.ArrowDown.pressed && lastKey === 'ArrowDown') {
         let collision = false;
         for (let i = 0; i < boundaries.length; i++) {
             if (circleCollidesWithRectangle({
-                circle: { ...pacman, velocity: { x: 0, y: 2 } },
+                circle: { ...pacman, velocity: { x: 0, y: SPEED } },
                 rectangle: boundaries[i]
             })) {
                 collision = true;
                 break;
             }
         }
-        if (!collision) pacman.velocity = { x: 0, y: 2 };
+        if (!collision) pacman.velocity = { x: 0, y: SPEED };
     } else if (keys.ArrowLeft.pressed && lastKey === 'ArrowLeft') {
         let collision = false;
         for (let i = 0; i < boundaries.length; i++) {
             if (circleCollidesWithRectangle({
-                circle: { ...pacman, velocity: { x: -2, y: 0 } },
+                circle: { ...pacman, velocity: { x: -SPEED, y: 0 } },
                 rectangle: boundaries[i]
             })) {
                 collision = true;
                 break;
             }
         }
-        if (!collision) pacman.velocity = { x: -2, y: 0 };
+        if (!collision) pacman.velocity = { x: -SPEED, y: 0 };
     } else if (keys.ArrowRight.pressed && lastKey === 'ArrowRight') {
         let collision = false;
         for (let i = 0; i < boundaries.length; i++) {
             if (circleCollidesWithRectangle({
-                circle: { ...pacman, velocity: { x: 2, y: 0 } },
+                circle: { ...pacman, velocity: { x: SPEED, y: 0 } },
                 rectangle: boundaries[i]
             })) {
                 collision = true;
                 break;
             }
         }
-        if (!collision) pacman.velocity = { x: 2, y: 0 };
+        if (!collision) pacman.velocity = { x: SPEED, y: 0 };
     }
 
     // Pellet Interaction
