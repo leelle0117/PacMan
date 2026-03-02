@@ -220,6 +220,11 @@ header h1 {
     .touch-only {
         display: block !important;
     }
+
+    /* D-pad needs flex layout, not block */
+    .dpad.touch-only {
+        display: flex !important;
+    }
 }
 
 .controls-hint {
