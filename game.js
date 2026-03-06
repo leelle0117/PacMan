@@ -21,7 +21,9 @@ const SPEED = IS_MOBILE ? 1.5 : 2;
 let score = 0;
 let lives = 3;
 let gameOver = false;
+let isPaused = false;
 let animationId;
+const pauseBtn = document.getElementById('pause-btn');
 
 // Map Layout
 // 0: Pellet
@@ -38,10 +40,10 @@ const map = [
     [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 0, 1, 1, 1, 2, 1, 2, 1, 1, 1, 0, 1, 1, 1, 1],
-    [2, 2, 2, 1, 0, 1, 2, 2, 2, 1, 2, 2, 2, 1, 0, 1, 2, 2, 2],
-    [1, 1, 1, 1, 0, 1, 2, 1, 1, 4, 1, 1, 2, 1, 0, 1, 1, 1, 1],
+    [2, 2, 2, 1, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 1, 2, 2, 2],
+    [1, 1, 1, 1, 0, 1, 2, 1, 1, 2, 1, 1, 2, 1, 0, 1, 1, 1, 1],
     [1, 2, 2, 2, 0, 2, 2, 1, 4, 4, 4, 1, 2, 2, 0, 2, 2, 2, 1],
-    [1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 2, 1, 0, 1, 1, 1, 1],
+    [1, 1, 1, 1, 0, 1, 2, 1, 4, 4, 4, 1, 2, 1, 0, 1, 1, 1, 1],
     [2, 2, 2, 1, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 1, 2, 2, 2],
     [1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 2, 1, 0, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -286,6 +288,18 @@ function circleCollidesWithRectangle({ circle, rectangle }) {
 function animate() {
     if (gameOver) return;
     animationId = requestAnimationFrame(animate);
+
+    if (isPaused) {
+        // Draw PAUSED text
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'var(--neon-yellow)';
+        ctx.font = 'bold 30px Orbitron';
+        ctx.textAlign = 'center';
+        ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // WIN CONDITION
@@ -343,6 +357,12 @@ function animate() {
         }
         if (!collision) pacman.velocity = { x: SPEED, y: 0 };
     }
+
+    // Tunnel Wraparound
+    if (pacman.position.x < -pacman.radius) pacman.position.x = canvas.width + pacman.radius;
+    if (pacman.position.x > canvas.width + pacman.radius) pacman.position.x = -pacman.radius;
+    if (pacman.position.y < -pacman.radius) pacman.position.y = canvas.height + pacman.radius;
+    if (pacman.position.y > canvas.height + pacman.radius) pacman.position.y = -pacman.radius;
 
     // Pellet Interaction
     for (let i = pellets.length - 1; i >= 0; i--) {
@@ -477,6 +497,10 @@ function animate() {
 
             ghost.prevCollisions = [];
         }
+
+        // Tunnel Wraparound for Ghosts
+        if (ghost.position.x < -ghost.radius) ghost.position.x = canvas.width + ghost.radius;
+        if (ghost.position.x > canvas.width + ghost.radius) ghost.position.x = -ghost.radius;
     });
 
     // Rotation based on velocity
@@ -496,6 +520,18 @@ restartBtn.addEventListener('click', () => {
     animate();
 });
 
+pauseBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+    if (isPaused) {
+        uiOverlay.classList.remove('hidden');
+        uiOverlay.classList.add('paused');
+        statusText.innerText = 'PAUSED';
+    } else {
+        uiOverlay.classList.add('hidden');
+        uiOverlay.classList.remove('paused');
+    }
+});
+
 window.addEventListener('keydown', ({ key }) => {
     if (keys[key]) {
         keys[key].pressed = true;
@@ -505,9 +541,9 @@ window.addEventListener('keydown', ({ key }) => {
 
 // D-pad Controls for Mobile
 const dpadDirections = {
-    'dpad-up':    'ArrowUp',
-    'dpad-down':  'ArrowDown',
-    'dpad-left':  'ArrowLeft',
+    'dpad-up': 'ArrowUp',
+    'dpad-down': 'ArrowDown',
+    'dpad-left': 'ArrowLeft',
     'dpad-right': 'ArrowRight'
 };
 
